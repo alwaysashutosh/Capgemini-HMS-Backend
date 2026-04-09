@@ -14,6 +14,8 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class UndergoesId implements Serializable {
     private Integer patient;
+
+    @jakarta.persistence.Column(name = "`procedure`")
     private Integer procedure;
     private Integer stay;
     private LocalDateTime dateUndergoes;
