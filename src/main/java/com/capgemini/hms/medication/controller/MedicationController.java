@@ -57,5 +57,39 @@ public class MedicationController {
         Medication saved = medicationService.saveMedication(med);
         return ResponseEntity.ok(ApiResponse.success(convertToDTO(saved), "Medication added to catalog successfully"));
     }
+    @PutMapping("/{code}")
+    @PreAuthorize("hasRole('ADMIN')")
+    @Operation(summary = "Update medication", description = "Updates an existing medication record")
+    public ResponseEntity<ApiResponse<MedicationDTO>> updateMedication(@PathVariable Integer code, @Valid @RequestBody MedicationDTO dto) {
+        dto.setCode(code);
+        Medication med = convertToEntity(dto);
+        Medication updated = medicationService.updateMedication(med);
+        return ResponseEntity.ok(ApiResponse.success(convertToDTO(updated), "Medication details updated successfully"));
+    }
 
+    @GetMapping("/search")
+    @PreAuthorize("hasAnyRole('ADMIN', 'DOCTOR', 'NURSE')")
+    @Operation(summary = "Search medications", description = "Filters active medications by name or brand with pagination")
+    public ResponseEntity<ApiResponse<PagedResponse<MedicationDTO>>> searchMedications(@RequestParam String query, Pageable pageable) {
+        Page<Medication> page = medicationService.searchMedications(query, pageable);
+        List<MedicationDTO> content = page.getContent().stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+        PagedResponse<MedicationDTO> pagedResponse = new PagedResponse<>(content, page.getNumber(), page.getSize(), page.getTotalElements(), page.getTotalPages(), page.isLast());
+        return ResponseEntity.ok(ApiResponse.success(pagedResponse));
+    }
+
+    public ResponseEntity<ApiResponse<String>> deleteMedication(@PathVariable Integer code) {
+        medicationService.deleteMedication(code);
+        return ResponseEntity.ok(ApiResponse.success("Medication record deleted successfully"));
+    }
+
+    private MedicationDTO convertToDTO(Medication m) {
+        return new MedicationDTO(m.getCode(), m.getName(), m.getBrand(), m.getDescription());
+    }
+
+    private Medication convertToEntity(MedicationDTO dto) {
+        return new Medication(dto.getCode(), dto.getName(), dto.getBrand(), dto.getDescription());
+    }
 }
+
