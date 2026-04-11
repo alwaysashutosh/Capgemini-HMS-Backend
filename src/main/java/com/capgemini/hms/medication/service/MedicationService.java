@@ -57,5 +57,4 @@ public class MedicationService {
         med.setIsDeleted(true);
         medicationRepository.save(med);
     }
-    
 }

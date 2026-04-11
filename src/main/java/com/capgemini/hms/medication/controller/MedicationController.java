@@ -1,21 +1,23 @@
 package com.capgemini.hms.medication.controller;
 
-import com.capgemini.hms.common.dto.ApiResponse;
-import com.capgemini.hms.common.dto.PagedResponse;
 import com.capgemini.hms.medication.dto.MedicationDTO;
 import com.capgemini.hms.medication.entity.Medication;
 import com.capgemini.hms.medication.service.MedicationService;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
+import com.capgemini.hms.common.dto.ApiResponse;
+import com.capgemini.hms.common.dto.PagedResponse;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 @RestController
 @RequestMapping("/api/v1/medications")
@@ -57,6 +59,7 @@ public class MedicationController {
         Medication saved = medicationService.saveMedication(med);
         return ResponseEntity.ok(ApiResponse.success(convertToDTO(saved), "Medication added to catalog successfully"));
     }
+
     @PutMapping("/{code}")
     @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Update medication", description = "Updates an existing medication record")
@@ -91,6 +94,4 @@ public class MedicationController {
     private Medication convertToEntity(MedicationDTO dto) {
         return new Medication(dto.getCode(), dto.getName(), dto.getBrand(), dto.getDescription());
     }
-    
 }
-
