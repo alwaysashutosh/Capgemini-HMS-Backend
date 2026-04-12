@@ -2,12 +2,13 @@ package com.capgemini.hms.patient.service;
 
 import com.capgemini.hms.patient.entity.Patient;
 import com.capgemini.hms.patient.repository.PatientRepository;
+import com.capgemini.hms.physician.entity.Physician;
 import com.capgemini.hms.physician.repository.PhysicianRepository;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import java.util.Optional;
 
 @Service
